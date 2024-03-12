@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const takePhotoButton = document.getElementById('take-photo');
     const resultsDiv = document.getElementById('results');
 
@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function loadMobileNet() {
-        return await mobilenet.load();
+        const model = await mobilenet.load();
+        return model;
     }
 
     async function classifyImage(image, classifier) {
