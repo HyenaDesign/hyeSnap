@@ -9,36 +9,36 @@ document.addEventListener('DOMContentLoaded', async function() {
         const result = await classifyImage(image, classifier);
         displayResults(result);
     });
-
     async function takePhoto() {
         return new Promise((resolve, reject) => {
-            const handleSuccess = function(stream) {
-                const video = document.createElement('video');
-                video.srcObject = stream;
-                document.body.appendChild(video);
-                video.play();
-
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const context = canvas.getContext('2d');
-
-                video.addEventListener('loadedmetadata', function() {
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    const photo = new Image();
-                    photo.src = canvas.toDataURL('image/jpeg');
-                    resolve(photo);
-                    stream.getTracks().forEach(track => track.stop());
-                    document.body.removeChild(video);
-                    document.body.removeChild(canvas);
-                });
-            };
-
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(handleSuccess)
-                .catch(error => reject(error));
+          const handleSuccess = function(stream) {
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            document.body.appendChild(video);
+            video.play();
+      
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+      
+            video.addEventListener('loadedmetadata', function() {
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const photo = new Image();
+              photo.src = canvas.toDataURL('image/jpeg');
+              document.body.appendChild(photo);
+              resolve(photo);
+              stream.getTracks().forEach(track => track.stop());
+              document.body.removeChild(video);
+              document.body.removeChild(canvas);
+            });
+          };
+      
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(handleSuccess)
+            .catch(error => reject(error));
         });
-    }
+      }
 
     async function loadMobileNet() {
         const model = await mobilenet.load();
